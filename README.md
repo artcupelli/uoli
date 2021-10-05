@@ -70,3 +70,22 @@ Aqui você encontra um histórico do que já foi desenvolvido e o que está send
 
 - Criação do repositório
 - Criação do diário
+
+## Outubro
+
+### Dia 05
+
+**Art**
+
+- Desenvolvendo o aplicativo
+- Ajudou a Gabi a configurar o Node e Android Studio
+
+**Dave**
+
+- Conectando a câmera e arrumando os monotores, pois ambos não estavam funcionando
+- Interface básica https://randomnerdtutorials.com/esp32-cam-car-robot-web-server/
+
+**Gabi**
+
+- Teve problemas com o Node Js e teve que instalar tudo de novo
+- Instalou o Android Studio com ajuda desde site: https://react-native.rocketseat.dev/android/windows/
