@@ -119,3 +119,4 @@ https://axios-http.com/docs/example)
 - Medimos a dimensão do atual carrinho
  ![image](https://user-images.githubusercontent.com/65685306/139359527-5203afbd-ef45-47ea-aab5-07e6137f5420.png)
 - Combinamos que vamos para a EACH no dia 05/11 para ter contato com o carrinho para trabalhar na parte visual do carrinho
+- Pensamos em mudar a base do carrinho para um outro tipo de madeira com um formato mais quadrado
