@@ -89,3 +89,34 @@ Aqui você encontra um histórico do que já foi desenvolvido e o que está send
 
 - Teve problemas com o Node Js e teve que instalar tudo de novo
 - Instalou o Android Studio com ajuda desde site: https://react-native.rocketseat.dev/android/windows/
+
+### Dia 13
+
+**Art, Dave e Gabi**
+
+- Ida para a EACH, pegamos o powerbank com o professor
+- Vimos pela primeira vez todos juntos o carrinho, mas acabou tendo uma falha e não conectando
+
+
+### Dia 22
+
+- Paramos de conectar o carrinho no wifi da casa e começamos a criar um access point a partir da ESPCam
+
+**Art**
+
+- Arrumou o circuito
+- Colou um interruptor 
+
+**Gabi e Dave**
+
+- Começaram a ver mais a parte do design do carrinho
+
+
+### Dia 28
+
+- Testamos as requisições de controle do carrinho usando a biblioteca AXIOS (
+https://axios-http.com/docs/example)
+- Testamos a chamada do webview para mostrar a transmissão da câmera (https://www.npmjs.com/package/react-native-webview)
+- Ainda decidindo qual será o design do carrinho
+- ![image](https://user-images.githubusercontent.com/65685306/139359527-5203afbd-ef45-47ea-aab5-07e6137f5420.png)
+- Combinamos que vamos para a EACH para ter contato com o carrinho para trabalhar na parte visual do carrinho
