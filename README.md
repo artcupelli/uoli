@@ -92,8 +92,6 @@ Aqui você encontra um histórico do que já foi desenvolvido e o que está send
 
 ### Dia 13
 
-**Art, Dave e Gabi**
-
 - Ida para a EACH, pegamos o powerbank com o professor
 - Vimos pela primeira vez todos juntos o carrinho, mas acabou tendo uma falha e não conectando
 
@@ -118,5 +116,6 @@ Aqui você encontra um histórico do que já foi desenvolvido e o que está send
 https://axios-http.com/docs/example)
 - Testamos a chamada do webview para mostrar a transmissão da câmera (https://www.npmjs.com/package/react-native-webview)
 - Ainda decidindo qual será o design do carrinho
-- ![image](https://user-images.githubusercontent.com/65685306/139359527-5203afbd-ef45-47ea-aab5-07e6137f5420.png)
-- Combinamos que vamos para a EACH para ter contato com o carrinho para trabalhar na parte visual do carrinho
+- Medimos a dimensão do atual carrinho
+ ![image](https://user-images.githubusercontent.com/65685306/139359527-5203afbd-ef45-47ea-aab5-07e6137f5420.png)
+- Combinamos que vamos para a EACH no dia 05/11 para ter contato com o carrinho para trabalhar na parte visual do carrinho
