@@ -1,12 +1,13 @@
 import React from 'react';
-import { Text } from 'react-native';
+
+import { MainScreen } from './src/screens';
+
 
 const App = () => {
-  return (
-    <Text>AA</Text>
-  )
-};
 
+  return <MainScreen />
+
+};
 
 
 export default App;

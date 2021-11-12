@@ -10,8 +10,13 @@
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
+    "@types/react-native-vector-icons": "^6.4.10",
+    "axios": "^0.24.0",
     "react": "17.0.2",
-    "react-native": "0.65.1"
+    "react-native": "0.65.1",
+    "react-native-live-stream": "^1.0.1",
+    "react-native-vector-icons": "^9.0.0",
+    "react-native-webview": "^11.14.1"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
