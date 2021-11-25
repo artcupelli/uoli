@@ -13,6 +13,7 @@ import { CameraDisplay, GamePad } from '../../components/organisms';
 import { captureRef, captureScreen } from "react-native-view-shot";
 
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
+
 import { Colors } from '../../constants/colors';
 
 
