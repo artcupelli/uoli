@@ -1,4 +1,6 @@
+var main = "#8969FB"
+
 export const Colors = {
-    purple: "#8969FB",
+    main: main,
     black: "#1B1B1D"
 }

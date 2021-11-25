@@ -1,19 +1,27 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-import { View, Image, Text, TouchableOpacity } from 'react-native';
+import { View, Image, TouchableOpacity, Modal } from 'react-native';
 
 import { CarControlService } from '../../service/car_control_service';
 
-import { WebView } from 'react-native-webview';
-
 import { styles } from './main_screen_style';
 
-import { Button } from '../../components/atoms';
+import { Button, Text } from '../../components/atoms';
+
+import { CameraDisplay, GamePad } from '../../components/organisms';
+
+import { captureRef, captureScreen } from "react-native-view-shot";
+
+import Icon from 'react-native-vector-icons/SimpleLineIcons';
+import { Colors } from '../../constants/colors';
 
 
 const MainScreen: React.FC = () => {
 
     const carController = new CarControlService();
+
+    const [isCameraClosed, setIsCameraClosed] = useState<boolean>(false);
+    const [screenshotSource, setScreenshotSource] = useState<string | null>();
 
 
     function goFoward() {
@@ -37,9 +45,38 @@ const MainScreen: React.FC = () => {
     }
 
 
+    function toogleCameraClosed() {
+        setIsCameraClosed(!isCameraClosed);
+    }
+
+    async function handleCaptureScreenShot(): Promise<void> {
+        const response = await captureScreen({ result: 'data-uri' });
+        setScreenshotSource(response);
+    }
+
 
     return (
         <View style={styles.container}>
+
+            <Modal visible={screenshotSource != null} transparent>
+                <View style={styles.modalScreenshot}>
+
+                    <View style={styles.modalContainer}>
+
+                        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                            <Text>Gostaria de salvar sua imagem?</Text>
+                            <Icon
+                                name="close"
+                                color={Colors.main}
+                                size={20}
+                                onPress={()=>{setScreenshotSource(null)}}
+                            />
+                        </View>
+                        <Image source={{ uri: screenshotSource! }} style={{ flex: 1 }} />
+
+                    </View>
+                </View>
+            </Modal>
 
             <View style={styles.headerContainer}>
             </View>
@@ -48,51 +85,32 @@ const MainScreen: React.FC = () => {
                 <View style={styles.leftButtonsContainer}>
                     <View style={styles.eyeButtonContainer}>
                         <Button
-                            icon="eye"
+                            icon={isCameraClosed ? "camera" : "eye"}
+                            onPress={toogleCameraClosed}
+                            pressed={isCameraClosed}
                         />
                     </View>
 
-                    <View style={styles.controllersContainer}>
+                    <View style={styles.eyeButtonContainer}>
+                        <Button icon="settings" />
+                    </View>
+
+                    <View style={styles.eyeButtonContainer}>
                         <Button
-                            icon="arrow-up"
-                            onPressIn={goFoward}
-                            onPressOut={stop}
-                        />
-                        <Button
-                            icon="arrow-left"
-                            alignDown
-                            onPressIn={goLeft}
-                            onPressOut={stop}
+                            icon="picture"
+                            onPress={() => { handleCaptureScreenShot() }}
                         />
                     </View>
+
+
                 </View>
 
-                <View style={styles.cameraContainer}>
-                    <WebView
-                        source={{ uri: 'http://192.168.4.1:81/stream' }}
-                    />
-                </View>
+                <CameraDisplay cameraClosed={isCameraClosed} />
 
                 <View style={styles.rightButtonsContainer}>
-                    <View style={styles.eyeButtonContainer}>
-                        <Button icon="cog" alignRight />
-                    </View>
 
-                    <View style={styles.controllersContainer}>
-                        <Button
-                            icon="arrow-right"
-                            alignRight
-                            onPressIn={goRight}
-                            onPressOut={stop}
-                        />
-                        <Button
-                            icon="arrow-down"
-                            alignRight
-                            alignDown
-                            onPressIn={goBack}
-                            onPressOut={stop}
-                        />
-                    </View>
+                    <GamePad />
+
                 </View>
             </View>
 

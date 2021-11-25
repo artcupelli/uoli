@@ -4,26 +4,25 @@ import { TouchableOpacity, Text } from 'react-native';
 
 import ButtonProps from "./button_props";
 
-import Icon from 'react-native-vector-icons/FontAwesome5';
+import Icon from 'react-native-vector-icons/SimpleLineIcons';
 
 import { styles } from './button_style';
 
+import { Colors } from '../../../constants/colors';
 
 
-const Button: React.FC<ButtonProps> = ({ icon, alignRight = false, alignDown = false, onPressIn, onPressOut }) => {
+const Button: React.FC<ButtonProps> = ({ icon, onPress = () => { }, pressed = false }) => {
 
     return (
         <TouchableOpacity
-            onPressIn={onPressIn}
-            onPressOut={onPressOut}
-            style={{ ...styles.container, ...{ justifyContent: alignDown ? "flex-end" : "flex-start" } }}
+            onPress={onPress}
+            style={{ ...styles.container, backgroundColor: pressed ? Colors.main : "transparent" }}
         >
-
             <Icon
-                style={{ ...styles.icon, ...{ textAlign: alignRight ? "right" : "left" } }}
+                style={{ ...styles.icon, color: pressed ? Colors.black : Colors.main }}
                 name={icon}
+                
             />
-
         </TouchableOpacity>
     );
 }
