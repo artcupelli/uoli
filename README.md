@@ -120,3 +120,22 @@ https://axios-http.com/docs/example)
  ![image](https://user-images.githubusercontent.com/65685306/139359527-5203afbd-ef45-47ea-aab5-07e6137f5420.png)
 - Combinamos que vamos para a EACH no dia 05/11 para ter contato com o carrinho para trabalhar na parte visual do carrinho
 - Pensamos em mudar a base do carrinho para um outro tipo de madeira com um formato mais quadrado
+
+## Novembro
+
+### Dia 12
+
+- Ida para a EACH.
+- Gabi levou a carrinho que estava com o Art + materiais que estavam com o Dave
+- Desenhamos como imaginávamos o carrinho
+![image](https://user-images.githubusercontent.com/65685306/144091351-5a88542b-fb8e-4216-bd99-1a0631774c89.png)
+
+### Dia 19 (para atualizar)
+
+
+### Dia 26
+
+- O carrinho foi desmontado e uma nova base foi construída!
+![image](https://user-images.githubusercontent.com/65685306/144091786-3fbda350-5aa3-480d-84c6-8fbb025f769e.png)
+
+
