@@ -17,6 +17,7 @@ O carrinho é composto por 3 partes principais:
 
 ## Controlador de motor
 Vamos começar com o controlador de motores.
+
  ![image](https://http2.mlstatic.com/D_NQ_NP_909088-MLB31066652496_062019-O.webp)
  
  Este componente é chamado de Driver Motor Ponte H e serve para controlar os motores do carrinho.
