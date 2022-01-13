@@ -9,31 +9,48 @@ export class CarControlService {
 
     async goFoward() {
 
+        console.log("FRENTE")
         await axios.get(`${this.baseUrl}/action?go=forward`);
 
     }
 
     async goBack() {
 
+        console.log("TRÁS")
         await axios.get(`${this.baseUrl}/action?go=backward`);
 
     }
 
     async goLeft() {
 
+        console.log("ESQUERDA")
         await axios.get(`${this.baseUrl}/action?go=left`);
 
     }
 
     async goRight() {
 
+        console.log("DIRETA")
         await axios.get(`${this.baseUrl}/action?go=right`);
 
     }
 
     async stop() {
 
+        console.log("PARO")
         await axios.get(`${this.baseUrl}/action?go=stop`);
+
+    }
+
+    async toogleLight() {
+
+        await axios.get(`${this.baseUrl}/action?go=l`);
+
+    }
+
+    async message(message: string) {
+
+        await axios.get(`${this.baseUrl}/action?go=M:${message}`);
 
     }
 }

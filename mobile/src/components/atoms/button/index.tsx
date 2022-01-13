@@ -11,17 +11,19 @@ import { styles } from './button_style';
 import { Colors } from '../../../constants/colors';
 
 
-const Button: React.FC<ButtonProps> = ({ icon, onPress = () => { }, pressed = false }) => {
+const Button: React.FC<ButtonProps> = ({ icon, onPress = () => { }, pressed = false, onPressIn = () => { }, onPressOut = () => { } }) => {
 
     return (
         <TouchableOpacity
             onPress={onPress}
+            onPressIn={() => onPressIn()}
+            onPressOut={() => onPressOut()}
             style={{ ...styles.container, backgroundColor: pressed ? Colors.main : "transparent" }}
         >
             <Icon
                 style={{ ...styles.icon, color: pressed ? Colors.black : Colors.main }}
                 name={icon}
-                
+
             />
         </TouchableOpacity>
     );

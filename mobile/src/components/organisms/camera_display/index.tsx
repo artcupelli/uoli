@@ -15,8 +15,8 @@ import CameraDisplayProps from './camera_display_props';
 
 const CameraDisplay: React.FC<CameraDisplayProps> = ({ cameraClosed }) => {
 
-    const url = 'http://192.168.4.1:81/stream';
-    // const url = 'https://blog.lucasgilbert.com.br/wp-content/uploads/2018/05/street-e-road-lucas-gilbert.jpg';
+    // const url = 'http://192.168.4.1';
+    const url = 'https://blog.lucasgilbert.com.br/wp-content/uploads/2018/05/street-e-road-lucas-gilbert.jpg';
 
     const [initalLoading, setInicialLoading] = useState<boolean>(true);
     const [isWebViewLoading, setIsWebViewLoading] = useState<boolean>(true);

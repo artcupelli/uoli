@@ -4,7 +4,7 @@ import { Colors } from "../../constants/colors";
 
 
 export const styles = StyleSheet.create({
-    
+
     container: {
         backgroundColor: Colors.black,
         flex: 1,
@@ -12,21 +12,16 @@ export const styles = StyleSheet.create({
         padding: 15,
     },
 
-    headerContainer: {
-        flex: 1,
-        flexDirection: "row"
-    },
-
     contentContainer: {
         flex: 9,
-        flexDirection: "row"
+        flexDirection: "column"
     },
 
     leftButtonsContainer: {
         paddingRight: 10,
-        flex: 1,
-        flexDirection: "column",
+        flexDirection: "row",
         justifyContent: "center",
+        height: 60
     },
 
     controllersContainer: {
@@ -47,7 +42,7 @@ export const styles = StyleSheet.create({
 
     modalContainer: {
         backgroundColor: Colors.black,
-        width: '60%',
+        width: '90%',
         height: "90%",
         borderWidth: 1,
         borderColor: Colors.main,
@@ -56,13 +51,31 @@ export const styles = StyleSheet.create({
 
 
     rightButtonsContainer: {
-        paddingLeft: 10,
-        flex: 1,
-        flexDirection: "column",
-        justifyContent: "flex-end",
-        alignItems: "center"
+        
+    },
 
+    sideButtonsContainer: {
+        flexDirection: "row",
+    },
+
+    messageContainer: {
+        justifyContent: "center",
+        flexDirection: "row",
+        alignItems: "center",
+        height: 60,
+        marginHorizontal: 5
+    },
+
+    input: {
+        flexGrow: 1,
+        backgroundColor: Colors.black,
+        borderColor: Colors.main,
+        color: Colors.main,
+        fontSize: 12,
+        height: 45,
+        paddingHorizontal: 10,
+        borderWidth: 1,
+        borderRadius: 10,
     }
-
 
 });
