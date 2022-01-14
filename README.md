@@ -138,6 +138,15 @@ https://axios-http.com/docs/example)
 - O carrinho foi desmontado e uma nova base foi construída!
 ![image](https://user-images.githubusercontent.com/65685306/144091786-3fbda350-5aa3-480d-84c6-8fbb025f769e.png)
 
+
+## Dezembro 
+
+### Dia 03
+
+- Ida para a EACH para confeccionar o UOLI
+- Colocar a tela no carrinho
+- Testar as funcionalidades 
+
 ## Janeiro
 
 ### Dia 12
