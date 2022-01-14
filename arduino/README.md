@@ -380,6 +380,9 @@ const char* password = "Carrinho";
 ````
 Essa parte do código se refere às credenciais do Wifi que será gerado pelo Carrinho.
 Logo em seguida é montado o html da página que será criada no IP da câmera. (Como em nosso projeto a ESP-32 irá gerar o wifi, o IP será sempre estático em 192.168.4.1)
+Note que na página, incluímos uma imagem (que é a visualização da câmera) e uma série de botões, que fazem requisições GET para o servidor da ESP32-CAM no caminho IP/action?go=
+É baseado nisso que fizemos as requisições também no aplicativo, sendo que o mesmo segue a mesma lógica da requisição GET.
+
 ````html
 static const char PROGMEM INDEX_HTML[] = R"rawliteral(
 <html>
@@ -446,6 +449,7 @@ static const char PROGMEM INDEX_HTML[] = R"rawliteral(
 Já a função abaixo é responsável por receber as requisições de rede. Pode-se ajustar o tamanho da variable, que diz respeito ao tamanho máximo da mensagem que pode ser recebeda. Nessa caso, se uma requisição tiver mais que 200 caracteres. 
 Essas requisições serão mensagens enviadas do usuário para a câmera, que podem fazer os mais diversos efeitos. No projeto, a câmera irá receber, por exemplo, comandos de direção (forward, backward, left and right), mensagem para serem exibidas na tela do dispositivo e também comando para ligar/desligar a lanterna.
 Para enviar as mensagens por comunicação serial, a câmera faz simplesmente println da variable recebida, o que será recebido pelo Mega, processado e executado. Os detalhes da conexão serial entre os arduinos serão colocados mais para frente.
+
 ````c
 static esp_err_t cmd_handler(httpd_req_t *req){
   char*  buf;
@@ -488,21 +492,26 @@ static esp_err_t cmd_handler(httpd_req_t *req){
   return httpd_resp_send(req, NULL, 0);
 }
 ````
+
 Por fim, dentro da função setup, além de ter mais algumas configurações da câmera, temos também a instância da comunicação serial e também a inicialização do ponto de acesso Wifi, onde é passado o ssid e password da rede, e também o servidor da câmera.
+
 ````c
 // Wi-Fi connection
   WiFi.softAP(ssid, password);
   // Start streaming web server
   startCameraServer();
 ````
+
 ### Comunicação Serial Esp32-CAM 
 Como a câmera é independente, sua ligação basicamente consiste em ligar os pinos GND e 5V. Todavia, para fazer a comunicação serial entre a câmera e o Arduino Mega, foi necessário fazer uma ligação dos Seriais da câmera com os do arduino Mega. 
 A imagem abaixo mostra os pinos da ESP32-CAM, onde pode-se observar que os pinos GPIO 1 e 3 são, respectivamente, os pinos TX e RX. Assim, quando a câmera faz comunicação serial, como println(), os dados serão transmitidos por essas portas. 
+
   ![image](https://lobodarobotica.com/blog/wp-content/uploads/2020/08/ESP32-CAM-pinout-new.png)
   
 Já o arduino Mega possui mais de um conjunto de portas seriais, o que torna possível o projeto. Isso porque, no Mega, o primeiro conjunto de portas seriais estará sendo usado pela display LCD. Assim, não bastaria um arduino Uno, por exemplo, pois este não conseguiria controlar o display e receber mensagens da ESP32-CAM.
 
 A montagem da circuito que possibilita essa comunicação pode ser vista abaixo. Destaca-se que os pinos TX e RX sempre devem ficar invertidos entre si, ou seja, pino TX conectado com RX e o contrário. 
+
   ![image](https://i.ibb.co/pwQXzxv/ESP-MEGA.png)
   
 ## Display LCD
