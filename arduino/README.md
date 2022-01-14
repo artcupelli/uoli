@@ -538,7 +538,7 @@ void setup() {
 ````
 Vamos explicar agora algumas das decisões de projeto e também explicar as funções criadas a partir disso.
 
-###Divisão da tela
+### Divisão da tela
 A resolução do display TFT é de 320x240. Para facilitar o trabalho com a tela, simplificamos a proporção da mesma por 16
 ![image](https://i.ibb.co/ng1zf05/Display-divis-o-1.png)
 Assim, sempre trabalhamos com números menores e facilitamos a lógica para construir imagens. 
@@ -549,11 +549,11 @@ int getPosi(int prop){
 }
 ```
 
-###Desenhando um retângulo
+### Desenhando um retângulo
 A biblioteca utilizada não tem muitas funções nativas, assim, fez-se necessário criar algumas delas para facilitar o trabalho.
 Existem duas funções criadas para desenhar um retângulo na tela: retangulo() e retanguloDelay().
 Basicamente as duas fazem a mesma função, ambas recebem como parâmetro a posição x e y que deseja-se começar a desenhar a forma, a altura e largura que a mesma deve ter e a sua cor. A diferença é que a função retanguloDelay irá desenhar o retângulo de modo que cada linha horizontal renderizada para criar a figura irá demorar x tempo de delay para desenhar a próxima, assim o retângulo é formado com uma espécie de animação (a função recebe como último parâmetro o speed, que é o valor do delay a ser aplicado entre as linhas).
-````c
+```c
 void retangulo(int x, int y, int altura, int largura, uint16_t cor){
   for(int i = y; i<y+altura; i++){
      tft.drawFastHLine(x, i, largura, cor);
@@ -566,9 +566,9 @@ void retanguloDelay(int x, int y, int altura, int largura, uint16_t cor, int spe
      delay(speed);
   }
 }
-````
+```
 
-###Desenhando os olhos
+### Desenhando os olhos
 Para desenhar os olhos, criamos uma função predeterminada para essa tarefa. Nela, basicamente é colocado um retângulo branco e no seu centro um outro retângulo menor com a cor do olho do robo (definida no inicio do código). Para a função é necessário passar apenas a posição x do olho, assim, para criar os dois olhos é necessário chamar a função duas vezes e indicar as posições de cada um.
 ````c
 void olho(int x){
@@ -582,7 +582,7 @@ void olho(int x){
 }
 ````
 
-###Construindo o rosto
+### Construindo o rosto
 Para fazer o rosto do robo, também fizemos uma função, onde a tela é preenchida de preto (para limpar o conteúdo) depois uma série de pequenos retângulos são colocados lado a lado, onde a posição do eixo y é alterada para dar a impressão de um sorriso/linha curva para o desenho. Depois é adicionado os dois olhos nas posições 2 e 13.
 ````c
 void makeFace(){
@@ -603,4 +603,4 @@ void makeFace(){
 
 E essas são as funções desenvolvidas para a parte gráfica do processamento do Arduino Mega. Resta agora mostrar o funcionamento completo  do mesmo, que incluir controlar os motores, receber mensagens da câmera e, é claro, controlar as animações do display. 
 
-##Arduino Mega
+## Arduino Mega
