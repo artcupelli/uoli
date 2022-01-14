@@ -12,7 +12,7 @@ O app foi desenvolvido com linguagem **C** utilizando de algumas bibliotecas dis
 O carrinho é composto por 4 componentes principais:
 
 1. Driver Motor de ponte H (Controlador de motores/rodas)
-2. ESP-32 CAM (Câmera Wireless)
+2. ESP32-CAM (Câmera Wireless)
 3. Display LCD TFT 2.4 touchscreen shield (Tela/Rosto robô)
 4. Arduino Mega
 
@@ -29,8 +29,8 @@ Vamos começar com o controlador de motores.
 Em nosso projeto, estamos apenas fazendo o carro ir para frente, trás, direita e esquerda, sem controle de velocidade. Por isso, as portas ENABLE A e B não estão sendo utilizadas. A energia é conectada na entrada +5v e GND e os motores são conectados nas portas OUT1 e OUT2 (Motor direita) e OUT3 e OUT4 (Motor esquerda). 
 **Quanto a programação do módulo, ela é feita juntamente com o arduino mega
 
-## ESP-32 CAM
-A ESP-32 CAM é um tipo de arduino que já vem equipado com conexão sem fio Wi-Fi e uma câmera, capaz de tirar fotos, gravar vídeos e, o objeto de interesse para o projeto, fazer trasmissão em rede das imagens captadas pela câmera.
+## ESP32-CAM
+A ESP32-CAM é um tipo de arduino que já vem equipado com conexão sem fio Wi-Fi e uma câmera, capaz de tirar fotos, gravar vídeos e, o objeto de interesse para o projeto, fazer trasmissão em rede das imagens captadas pela câmera.
 
   ![image](https://images.tcdn.com.br/img/img_prod/650361/esp32_cam_wifi_bluetooth_com_camera_inclusa_2465_11_20200205161931.jpg)
 
@@ -39,10 +39,10 @@ Em nosso projeto, a câmera é responsável por:
 2. Captar e transmitir a imagem na rede criada
 3. Receber e enviar as requisições de rede dadas pelo usuário para o Arduino Mega, via conexão Serial.
 
-O autor código consultado para criar o programa carregada na ESP-32 CAM foi o Rui Santos e o site com o código original pode ser encontrada no link abaixo.
+O autor código consultado para criar o programa carregada na ESP32-CAM foi o Rui Santos e o site com o código original pode ser encontrada no link abaixo.
 https://randomnerdtutorials.com/esp32-cam-car-robot-web-server/
 
-O código carregado na ESP-32 CAM também pode ser visto abaixo, em seguida, explicaremos as principais partes do código.
+O código carregado na ESP32-CAM também pode ser visto abaixo, em seguida, explicaremos as principais partes do código.
 ```c
 /*********
   Rui Santos
@@ -488,17 +488,23 @@ static esp_err_t cmd_handler(httpd_req_t *req){
   return httpd_resp_send(req, NULL, 0);
 }
 ````
-Por fim, dentro da função setup, além de ter mais algumas configurações da câmera, temos também a instância da comunicação serial e também a inicialização do ponto de acesso Wifi e o servidor da câmera.
+Por fim, dentro da função setup, além de ter mais algumas configurações da câmera, temos também a instância da comunicação serial e também a inicialização do ponto de acesso Wifi, onde é passado o ssid e password da rede, e também o servidor da câmera.
 ````c
 // Wi-Fi connection
   WiFi.softAP(ssid, password);
   // Start streaming web server
   startCameraServer();
 ````
-A montagem desse circuito, que integra o Driver do motor e a ESP-CAM pode ser vista abaixo:
+### Comunicação Serial Esp32-CAM 
+Como a câmera é independente, sua ligação basicamente consiste em ligar os pinos GND e 5V. Todavia, para fazer a comunicação serial entre a câmera e o Arduino Mega, foi necessário fazer uma ligação dos Seriais da câmera com os do arduino Mega. 
+A imagem abaixo mostra os pinos da ESP32-CAM, onde pode-se observar que os pinos GPIO 1 e 3 são, respectivamente, os pinos TX e RX. Assim, quando a câmera faz comunicação serial, como println(), os dados serão transmitidos por essas portas. 
+  ![image](https://lobodarobotica.com/blog/wp-content/uploads/2020/08/ESP32-CAM-pinout-new.png)
+  
+Já o arduino Mega possui mais de um conjunto de portas seriais, o que torna possível o projeto. Isso porque, no Mega, o primeiro conjunto de portas seriais estará sendo usado pela display LCD. Assim, não bastaria um arduino Uno, por exemplo, pois este não conseguiria controlar o display e receber mensagens da ESP32-CAM.
 
-  ![image](https://i0.wp.com/randomnerdtutorials.com/wp-content/uploads/2021/01/ESP32-CAM-Remote-Controlled-Robot-Diagram.png?resize=1024%2C780&quality=100&strip=all&ssl=1)
-
+A montagem da circuito que possibilita essa comunicação pode ser vista abaixo. Destaca-se que os pinos TX e RX sempre devem ficar invertidos entre si, ou seja, pino TX conectado com RX e o contrário. 
+  ![image](https://ibb.co/3dvhN7y)
+  
 ## Display LCD
 Por último, e realmente menos importante, temos o Display LCD Tft 2.4 Touch Screen, que em nosso projeto tem a missão apenas deixar o robô mais agradável e amigável.
 
