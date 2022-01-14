@@ -503,7 +503,7 @@ A imagem abaixo mostra os pinos da ESP32-CAM, onde pode-se observar que os pinos
 Já o arduino Mega possui mais de um conjunto de portas seriais, o que torna possível o projeto. Isso porque, no Mega, o primeiro conjunto de portas seriais estará sendo usado pela display LCD. Assim, não bastaria um arduino Uno, por exemplo, pois este não conseguiria controlar o display e receber mensagens da ESP32-CAM.
 
 A montagem da circuito que possibilita essa comunicação pode ser vista abaixo. Destaca-se que os pinos TX e RX sempre devem ficar invertidos entre si, ou seja, pino TX conectado com RX e o contrário. 
-  ![image](https://ibb.co/3dvhN7y)
+  ![image](https://i.ibb.co/pwQXzxv/ESP-MEGA.png)
   
 ## Display LCD
 Por último, e realmente menos importante, temos o Display LCD Tft 2.4 Touch Screen, que em nosso projeto tem a missão apenas deixar o robô mais agradável e amigável.
