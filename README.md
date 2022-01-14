@@ -138,4 +138,20 @@ https://axios-http.com/docs/example)
 - O carrinho foi desmontado e uma nova base foi construída!
 ![image](https://user-images.githubusercontent.com/65685306/144091786-3fbda350-5aa3-480d-84c6-8fbb025f769e.png)
 
+## Janeiro
 
+### Dia 12
+
+- Ida para a EACH
+- Montagem final do exterior do carrinho
+- Tela apresentou defeito
+
+### Dia 13 
+
+- Compramos uma nova tela e trocamos
+- Carrinho funcionando corretamente, com o envio de mensagem, luz e tela
+- Finalização do aplicativo com o novo layout
+
+### Dia 14 
+
+- Apresentação final
