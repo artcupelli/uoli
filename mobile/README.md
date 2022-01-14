@@ -85,7 +85,7 @@ Um grande objetivo desta maneira de organizar o projeto é reaproveitar código.
 Na pasta ***Components*** teremos todos os componentes do projeto seguindo a estrutura do **Atomic Design.** Você pode encontrar mais sobre [neste livro](https://drive.google.com/file/d/1Ggbgm52L0MQ8UGAmWBlVAD1bPVQjXEOw/view?usp=sharing). Basicamente essa linha de pensamento compara a construção da interface de uma aplicação com a estrutura natural da matéria (átomos, moléculas, organismos, …). Cada um dos componentes do Atomic Design serão especificados na tabela abaixo.
 
 
-![alt text for screen readers](/images/table.png "Text to show on mouseover")
+![alt text for screen readers](/mobile/images/table.png "Text to show on mouseover")
 
 
 Dentro de cada uma das pastas conterão subpastas com os componentes. A estrutura da subpasta será definida no tópico **Componentes**.
@@ -114,7 +114,7 @@ Para cada novo componente deve ser criado uma nova pasta com nome em minúsculo,
 
 Dentro de cada uma das pastas terão quatro arquivos, explicados abaixo.
 
-![alt text for screen readers](/images/table2.png "Text to show on mouseover")
+![alt text for screen readers](/mobile/images/table2.png "Text to show on mouseover")
 
 A estrutura do componente deve ser feita com componentes funcionais, e não classes, para facilitar a leitura e evitar códigos extensos. A definição básica deve ser parecida com o código abaixo:
 
