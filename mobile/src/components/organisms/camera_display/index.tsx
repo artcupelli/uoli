@@ -15,8 +15,8 @@ import CameraDisplayProps from './camera_display_props';
 
 const CameraDisplay: React.FC<CameraDisplayProps> = ({ cameraClosed }) => {
 
-    // const url = 'http://192.168.4.1';
-    const url = 'https://blog.lucasgilbert.com.br/wp-content/uploads/2018/05/street-e-road-lucas-gilbert.jpg';
+    const url = 'http://192.168.4.1';
+    // const url = 'https://blog.lucasgilbert.com.br/wp-content/uploads/2018/05/street-e-road-lucas-gilbert.jpg';
 
     const [initalLoading, setInicialLoading] = useState<boolean>(true);
     const [isWebViewLoading, setIsWebViewLoading] = useState<boolean>(true);
@@ -91,7 +91,9 @@ const CameraDisplay: React.FC<CameraDisplayProps> = ({ cameraClosed }) => {
                     onLoadStart={onStartLoading}
                     onLoadEnd={onFinishLoading}
                     onError={onError}
+                    userAgent="Chrome/67.0.3396.99Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko)  Safari/537.36"
                     onHttpError={onError}
+
                 />
 
                 <Animated.View style={{ ...styles.darkCover, opacity: opacity }} />

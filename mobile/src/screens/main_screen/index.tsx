@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { View, Image, TouchableOpacity, Modal, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Image, Modal, TextInput } from 'react-native';
 
 import { CarControlService } from '../../service/car_control_service';
 
@@ -10,7 +10,7 @@ import { Button, Text } from '../../components/atoms';
 
 import { CameraDisplay } from '../../components/organisms';
 
-import { captureRef, captureScreen } from "react-native-view-shot";
+import { captureScreen } from "react-native-view-shot";
 
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
 

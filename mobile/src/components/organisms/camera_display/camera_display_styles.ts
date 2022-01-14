@@ -5,9 +5,8 @@ import { Colors } from "../../../constants/colors";
 export const styles = StyleSheet.create({
 
     container: {
+        width: "100%",
         flex: 4,       
-        borderWidth: 2,
-        borderColor: Colors.main,
         maxHeight: 300,
         marginVertical: 20
     },

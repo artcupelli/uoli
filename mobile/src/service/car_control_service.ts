@@ -10,35 +10,35 @@ export class CarControlService {
     async goFoward() {
 
         console.log("FRENTE")
-        await axios.get(`${this.baseUrl}/action?go=forward`);
+        await axios.get(`${this.baseUrl}/action?go=F`);
 
     }
 
     async goBack() {
 
         console.log("TRÁS")
-        await axios.get(`${this.baseUrl}/action?go=backward`);
+        await axios.get(`${this.baseUrl}/action?go=B`);
 
     }
 
     async goLeft() {
 
         console.log("ESQUERDA")
-        await axios.get(`${this.baseUrl}/action?go=left`);
+        await axios.get(`${this.baseUrl}/action?go=L`);
 
     }
 
     async goRight() {
 
         console.log("DIRETA")
-        await axios.get(`${this.baseUrl}/action?go=right`);
+        await axios.get(`${this.baseUrl}/action?go=R`);
 
     }
 
     async stop() {
 
         console.log("PARO")
-        await axios.get(`${this.baseUrl}/action?go=stop`);
+        await axios.get(`${this.baseUrl}/action?go=S`);
 
     }
 
@@ -50,7 +50,7 @@ export class CarControlService {
 
     async message(message: string) {
 
-        await axios.get(`${this.baseUrl}/action?go=M:${message}`);
+        await axios.get(`${this.baseUrl}/action?go=m${message}`);
 
     }
 }
