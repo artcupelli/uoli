@@ -476,7 +476,7 @@ Por fim, dentro da função setup, além de ter mais algumas configurações da 
   startCameraServer();
 ````
 
-### Comunicação Serial Esp32-CAM 
+### Comunicação Serial ESP32-CAM 
 Como a câmera é independente, sua ligação basicamente consiste em ligar os pinos GND e 5V. Todavia, para fazer a comunicação serial entre a câmera e o Arduino Mega, foi necessário fazer uma ligação dos Seriais da câmera com os do arduino Mega. 
 A imagem abaixo mostra os pinos da ESP32-CAM, onde pode-se observar que os pinos GPIO 1 e 3 são, respectivamente, os pinos TX e RX. Assim, quando a câmera faz comunicação serial, como println(), os dados serão transmitidos por essas portas. 
 
@@ -601,6 +601,433 @@ void makeFace(){
 }
 ````
 
-E essas são as funções desenvolvidas para a parte gráfica do processamento do Arduino Mega. Resta agora mostrar o funcionamento completo  do mesmo, que incluir controlar os motores, receber mensagens da câmera e, é claro, controlar as animações do display. 
+E essas são as funções desenvolvidas para a parte gráfica do processamento do Arduino Mega. Resta agora mostrar o funcionamento completo do mesmo, que incluir controlar os motores, receber mensagens da câmera e, é claro, controlar as animações do display. 
 
 ## Arduino Mega
+O Arduino Mega é um dos principais agentes. Nele é onde se concentra a maior parte do trabalho de programação desenvolvido.
+Além da programação que envolve a manibulação do display, há ainda algumas outras tarefas, que são:
+
+1. Receber mensagens da ESP32-CAM via comunicação Serial
+2. Controlar o Driver ponte H
+3. Controlar as animações do display
+
+O código completo carregado no Arduino Mega pode ser visto abaixo:
+````c
+/*
+ *   CÓDIGO:  Q0684
+ *   AUTOR:   BrincandoComIdeias
+ *   ACOMPANHE: https://www.youtube.com/brincandocomideias ; https://www.instagram.com/canalbrincandocomideias/
+ *   APRENDA: https://cursodearduino.net/ ; https://cursoderobotica.net
+ *   COMPRE:  https://www.arducore.com.br/
+ *   SKETCH:  Verificar identificador  
+ *   DATA:    15/09/2021
+*/
+
+// INCLUSÃO DE BIBLIOTECAS
+#include <MCUFRIEND_kbv.h>
+
+// DEFINIÇÕES
+#define ROXO   0xA602FB
+#define FR 41 //forward right
+#define BR 43 //backward right
+#define FL 45 //forward left
+#define BL 47 //backward left
+#define LUZ A6
+#define OLHO TFT_MAROON
+// INSTANCIANDO OBJETOS
+MCUFRIEND_kbv tft;
+
+void setup() {
+  //inicializando portas seriais
+  Serial1.begin(115200);
+  Serial.begin(115200);
+  uint16_t ID = tft.readID();
+  tft.begin(ID);
+  
+  //definindo pinMode
+  pinMode(FR, OUTPUT);
+  pinMode(BR, OUTPUT);
+  pinMode(FL, OUTPUT);
+  pinMode(BL, OUTPUT);
+  pinMode(LUZ, OUTPUT);
+  
+  //parando os motores
+  digitalWrite(FR, LOW);
+  digitalWrite(BR, LOW);
+  digitalWrite(FL, LOW);
+  digitalWrite(BL, LOW);
+  digitalWrite(LUZ, LOW);
+  
+  Serial.print("Identificador do display: ");
+  Serial.println(ID, HEX);
+  
+  //escrevendo UoLi em texto grande na tela
+  //tela de boas vindas
+  tft.setRotation(3);
+  tft.fillScreen(TFT_BLACK);
+  tft.setTextColor(ROXO);
+  tft.setTextSize(10);
+  tft.setCursor(20, 90);
+  tft.print("UoLi!");
+  //espera um pouco na tela inicial e depois faz a rosto do robo
+  delay(3000);
+  makeFace();
+  
+}
+//variaveis de controle
+
+//quando estiver falando ele inicia a contagem para retirar a mensagem da tela
+bool falando = false;
+int cont_fala = 0;
+//variável usada para fazer a contagem de tempo para piscar o olho do robo
+int cont = 25;
+//variável para o tamanho do texto das mensagens impressas na tela
+int textSize = 2;
+//variável que guarda o deslocamento do centro do olho no eixo x
+//olhoDir>0 = olho deslocado para a direita, <0 para esquerda, 0 centro
+int olhoDir = 0;
+void loop() {
+  //sempre que houver mensagens da ESP32, chama a função de leitura
+  if(Serial1.available()) serialComunication();
+  
+  //incrementa o contador para piscar 
+  cont++;
+  if(falando){
+    //se estiver falando também incrementa o contador para retirar a mensagem da tela
+    cont_fala++;
+    if(cont_fala==100){
+      //se o contador chegou em 100 (ou seja, 100 loops, onde cada loop tem apenas um delay de 100ms, ou seja, após 10000ms, ou 10s, a mensagem escrita é apagada)
+      //para apagar ele refaz o rosto do robo. Além de zerar ambos os contadores e altarar falando para false
+      makeFace();
+      cont=0;
+      cont_fala=0;
+      falando = false;
+    }
+  }
+  if(cont==50){
+    //se o contador chegou em 50, então se passaram aproximadamente 5 segundo
+    //para piscar o robo faz um retângulo na área do olho que será preenchido com um pequeno delay
+    //dando assim a impressão de fechar dos olhos da personagem.
+    retanguloDelay(getPosi(2), getPosi(2), getPosi(4), getPosi(18), TFT_BLACK, 1);
+    //espera um pouco com os olhos fechados e abre o olho, retorna o contador para 0;
+    delay(10);
+    olho(2);
+    olho(13);
+    cont=0;
+  }
+  delay(100);
+}
+
+void serialComunication(){
+  
+  while(Serial1.available()){
+    char c = Serial1.read();
+    switch(c){
+      case 'F': 
+        digitalWrite(FR, HIGH);
+        digitalWrite(BR, LOW);
+        digitalWrite(FL, HIGH);
+        digitalWrite(BL, LOW);
+        Serial.println("Frente");
+        //muda direção do olho para centro (0 descolamento)
+        olhoDir = 0;
+        olho(2);
+        olho(13);
+        
+      break;
+      case 'B':
+        digitalWrite(FR, LOW);
+        digitalWrite(BR, HIGH);
+        digitalWrite(FL, LOW);
+        digitalWrite(BL, HIGH); 
+        Serial.println("Tras");
+        //muda direção do olho para centro (0 descolamento)
+        olhoDir = 0;
+        olho(2);
+        olho(13);
+      break;
+      case 'R': 
+        digitalWrite(FR, HIGH);
+        digitalWrite(BR, LOW);
+        digitalWrite(FL, LOW);
+        digitalWrite(BL, HIGH);
+        Serial.println("Direita");
+        //muda direção do olho para direita do carrinho (esquerda da tela quando olhado de frente)
+        olhoDir = -10;
+        olho(2);
+        olho(13);
+      break;
+      case 'L': 
+        digitalWrite(FR, LOW);
+        digitalWrite(BR, HIGH);
+        digitalWrite(FL, HIGH);
+        digitalWrite(BL, LOW);
+        Serial.println("Esquerda");
+        //muda direção do olho para esqueda do carrinho (direita da tela quando olhado de frente)
+        olhoDir = 10;
+        olho(2);
+        olho(13);
+      break;
+      case 'S':
+        digitalWrite(FR, LOW);
+        digitalWrite(BR, LOW);
+        digitalWrite(FL, LOW);
+        digitalWrite(BL, LOW); 
+        Serial.println("Para");
+        //muda direção do olho para centro (0 descolamento)
+        olhoDir = 0;
+        olho(2);
+        olho(13);
+      break;
+      case 'l':
+        if(digitalRead(LUZ)==LOW){
+          digitalWrite(LUZ, HIGH);
+        }else{
+          digitalWrite(LUZ, LOW);
+        }
+      break;
+      case 'm': 
+          
+          String mensagem = "";
+          Serial.println("Mensagem:");
+          c = Serial1.read();
+          if(c=='L'){
+            if(Serial1.available()){
+              c = Serial1.read();
+              if(c=='+'){
+                textSize++;
+                mensagem="Assim ta bom?";
+              }else if(c=='-'){
+                textSize--;
+                mensagem="Assim ta bom?";
+              }else{
+                mensagem= "L";
+                mensagem.concat(c);
+              }
+            }else
+                mensagem.concat(c);              
+          }else
+          if(c == '%'){
+            if(Serial1.available()>0){
+              c = Serial1.read();
+              if(c=='2'){                  
+                c = Serial1.read();
+                mensagem.concat(' ');
+              }else{
+                mensagem.concat('%');
+                mensagem.concat(c);
+              }
+            }else{
+              mensagem.concat('%');
+            }
+          }else{
+            mensagem.concat(c);
+          }
+          while(Serial1.available()>0){
+            c = Serial1.read();
+            if(c == '%'){
+              if(Serial1.available()>0){
+                c = Serial1.read();
+                if(c=='2'){                  
+                  c = Serial1.read();
+                  mensagem.concat(' ');
+                }else{
+                  mensagem.concat('%');
+                  mensagem.concat(c);
+                  
+                }
+              }
+            }else 
+            if (c != '\n'){
+              // Concatena valores
+              mensagem.concat(c);
+            }
+             delay(10);
+          }
+          
+          tft.setTextColor(TFT_BLACK);
+          tft.setTextSize(textSize);
+          tft.setCursor(30, getPosi(8)+10);
+          retanguloDelay(getPosi(0), getPosi(8), getPosi(5), getPosi(20), TFT_WHITE, 2);
+          tft.print(mensagem);
+          cont_fala=0;
+          falando=true;
+          Serial.println(mensagem);
+      break;
+      default:
+          tft.setTextColor(TFT_BLACK);
+          tft.setTextSize(4);
+          tft.setCursor(30, getPosi(8)+10);
+          retanguloDelay(getPosi(0), getPosi(8), getPosi(5), getPosi(20), TFT_WHITE, 2);
+          tft.print("Não entendi... ):");
+          cont_fala=50;
+          falando=true;
+          Serial.println(mensagem);
+      
+  }
+    
+//      default:
+
+    }
+}
+
+void makeFace(){
+  tft.fillScreen(TFT_BLACK);
+  retangulo(getPosi(2), getPosi(10), getPosi(1), getPosi(2), TFT_WHITE);
+  retangulo(getPosi(4), getPosi(10)+10, getPosi(1), getPosi(2), TFT_WHITE);
+  retangulo(getPosi(6), getPosi(10)+20, getPosi(1), getPosi(2), TFT_WHITE);
+  retangulo(getPosi(8), getPosi(10)+30, getPosi(1), getPosi(2), TFT_WHITE);
+  retangulo(getPosi(10), getPosi(10)+30, getPosi(1), getPosi(2), TFT_WHITE);
+  retangulo(getPosi(12), getPosi(10)+20, getPosi(1), getPosi(2), TFT_WHITE);
+  retangulo(getPosi(14), getPosi(10)+10, getPosi(1), getPosi(2), TFT_WHITE);
+  retangulo(getPosi(16), getPosi(10), getPosi(1), getPosi(2), TFT_WHITE);
+  //320 x 240 
+  olho(2);
+  olho(13);
+}
+int getPosi(int prop){
+  return 16*prop;
+}
+
+
+void olho(int x){
+  for(int i = getPosi(2); i<getPosi(7); i++){
+    tft.drawFastHLine(getPosi(x), i, 80, TFT_WHITE);
+  }
+  for(int i = getPosi(3)+10; i<getPosi(6)-10; i++){
+    tft.drawFastHLine(getPosi(x)+25+olhoDir, i, 30, OLHO);
+  }
+  
+}
+
+void retangulo(int x, int y, int altura, int largura, uint16_t cor){
+  for(int i = y; i<y+altura; i++){
+     tft.drawFastHLine(x, i, largura, cor);
+  }
+}
+
+void retanguloDelay(int x, int y, int altura, int largura, uint16_t cor, int speed){
+  for(int i = y; i<y+altura; i++){
+     tft.drawFastHLine(x, i, largura, cor);
+     delay(speed);
+  }
+}
+````
+
+### Comunicação Serial Arduino Mega
+
+A comunicação serial no Arduino Mega acontece em dois conjuntos de portas. TX0 e RX0 e TX1 e RX1. O conjunto Serial (TX0 e RX0) é utilizado pelo display LCD e o Serial1 é utilizado pela ESP32-CAM.
+Pela Serial, pode-se escrever textos no display, para isso basta inicializar (begin) o objeto tft e configurar a cor do texto, a posição do ponteiro, o tamanho da fonte e, é claro, fazer o print com a informação a ser impressa. (Veja a seção do display para entender melhor seu funcionamento)
+
+Já para a Serial1, a mesma será responsável por receber as mensagens enviadas pela ESP32-CAM. Essas mensagens são capturadas pela função serialComunication().
+Essa função primeiramente lê o primeiro caracter recebido, pois este determina a natureza da mensagem recebida.
+Caso seja F, B, R, L ou S (maiúsculos), então a mensagem que chegou nada mais é que um dos comando para controlar os motores.
+Caso seja l (L minúsculo) esse é um comando para ligar/desligar a lanterna do robo.
+Por fim, se for m (também minúsculo), então esta é uma mensagem e devem haver mais caracteres a serem lidos a frente. Nesse caso, deve-se precupar com alguns casos, pois se a mensagem enviada por igual à L+ ou L- então este também é um comando para aumentar ou diminuir o tamanho do texto. 
+Além disso, caso a mensagem contenha espaços " ", então é necessário fazer um tratamento, pois, como as requisições são mandados por rede para a ESP32-CAM, então espaços se tornam "%20" dentro da URL enviada. Assim sempre que for lido o caracter %, deve-se verificar se ele está acompanhado de 20, pois se sim, este deve ser substituido por um espaço.
+
+### Controlando os motores
+Para controlar os motores pelo arduino, usando o Driver ponte H, é muito simples. Este é feito na mesma função de leitura das mensagens, serialComunication(). 
+Antes, no setup(), é necessário:
+1. Definir os pinos que controlarão de cada uma das entradas do Driver (no projeto são usados os pinos 41, 43, 45 e 47)
+2. Colocar o modo dos pinos em OUTPUT
+3. Depois basta fazer as escritas nas portas com uma combinação de acordo com a direção desejada.
+
+Segue abaixo o código de exemplo dessas ações necessárias para controlar os motores.
+```c
+#define FR 41 //forward right
+#define BR 43 //backward right
+#define FL 45 //forward left
+#define BL 47 //backward left
+void setup() {
+//[...]
+  pinMode(FR, OUTPUT);
+  pinMode(BR, OUTPUT);
+  pinMode(FL, OUTPUT);
+  pinMode(BL, OUTPUT);
+  pinMode(LUZ, OUTPUT);
+  
+  //Para o carrinho não começar andando, abaixa-se todas as portas
+  digitalWrite(FR, LOW);
+  digitalWrite(BR, LOW);
+  digitalWrite(FL, LOW);
+  digitalWrite(BL, LOW);
+  digitalWrite(LUZ, LOW);
+  char c = 'F';
+//[...]
+}
+//[...]
+void serialComunication(){
+//[...]
+  switch(c){
+      case 'F': 
+        digitalWrite(FR, HIGH);
+        digitalWrite(BR, LOW);
+        digitalWrite(FL, HIGH);
+        digitalWrite(BL, LOW);
+        Serial.println("Frente");
+        //muda direção do olho para centro (0 descolamento)
+        olhoDir = 0;
+        olho(2);
+        olho(13);
+        
+      break;
+      case 'B':
+        digitalWrite(FR, LOW);
+        digitalWrite(BR, HIGH);
+        digitalWrite(FL, LOW);
+        digitalWrite(BL, HIGH); 
+        Serial.println("Tras");
+        //muda direção do olho para centro (0 descolamento)
+        olhoDir = 0;
+        olho(2);
+        olho(13);
+      break;
+      case 'R': 
+        digitalWrite(FR, HIGH);
+        digitalWrite(BR, LOW);
+        digitalWrite(FL, LOW);
+        digitalWrite(BL, HIGH);
+        Serial.println("Direita");
+        //muda direção do olho para direita do carrinho (esquerda da tela quando olhado de frente)
+        olhoDir = -10;
+        olho(2);
+        olho(13);
+      break;
+      case 'L': 
+        digitalWrite(FR, LOW);
+        digitalWrite(BR, HIGH);
+        digitalWrite(FL, HIGH);
+        digitalWrite(BL, LOW);
+        Serial.println("Esquerda");
+        //muda direção do olho para esqueda do carrinho (direita da tela quando olhado de frente)
+        olhoDir = 10;
+        olho(2);
+        olho(13);
+      break;
+      case 'S':
+        digitalWrite(FR, LOW);
+        digitalWrite(BR, LOW);
+        digitalWrite(FL, LOW);
+        digitalWrite(BL, LOW); 
+        Serial.println("Para");
+        //muda direção do olho para centro (0 descolamento)
+        olhoDir = 0;
+        olho(2);
+        olho(13);
+      break;
+      //[..]
+}
+```
+
+### Animações da tela/rosto robô
+O robô possui algumas animações envolvendo seu display, essas são:
+1. Piscar os olhos
+2. "Falar"
+3. Aumentar tamanho do texto da "fala"
+4. Olhar para os lados 
+
+## Esquema completo ligações
+O esquema abaixo mostra todas as conexões entre os componentes dentro do carrinho UoLi, bem como uma lista das conexões.
+![image](https://i.ibb.co/GPPfCv1/PROJETO-COMPLETO-1.png)
+
