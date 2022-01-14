@@ -17,9 +17,6 @@ O carrinho é composto por 4 componentes principais:
 4. Arduino Mega
 
 ## Controlador de motor
-Vamos começar com o controlador de motores.
-
- ![image](https://http2.mlstatic.com/D_NQ_NP_909088-MLB31066652496_062019-O.webp)
  
  Este componente é chamado de Driver Motor Ponte H e serve para controlar os motores do carrinho.
  Esse módulo trabalho basicamente com 4 portas de saída e 4 portas de entrada. Cada dupla de portas de entrada é resposável por controlar um dos motores, onde colocar um dos pinos em high e o outro em low resultará em um movimento para traz ou para frente.
@@ -62,10 +59,6 @@ O código carregado na ESP32-CAM também pode ser visto abaixo, em seguida, expl
 #include "soc/rtc_cntl_reg.h"    // disable brownout problems
 #include "esp_http_server.h"
 
-// Replace with your network credentials
-const char* ssid = "UoLi";
-const char* password = "Carrinho";
-
 #define PART_BOUNDARY "123456789000000000000987654321"
 
 #define CAMERA_MODEL_AI_THINKER
@@ -87,6 +80,9 @@ const char* password = "Carrinho";
 #define HREF_GPIO_NUM     23
 #define PCLK_GPIO_NUM     22
 
+// Replace with your network credentials
+const char* ssid = "UoLi";
+const char* password = "Carrinho";
 
 static const char* _STREAM_CONTENT_TYPE = "multipart/x-mixed-replace;boundary=" PART_BOUNDARY;
 static const char* _STREAM_BOUNDARY = "\r\n--" PART_BOUNDARY "\r\n";
@@ -100,7 +96,7 @@ static const char PROGMEM INDEX_HTML[] = R"rawliteral(
     <title>ESP32-CAM Robot</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-      body { font-family: Arial; text-align: center; margin:0px auto; padding-top: 30px; background-color: #1b1b1b;}
+      body { font-family: Arial; text-align: center; margin:0px auto; background-color: #1b1b1b;}
       table { margin-left: auto; margin-right: auto; }
       td { padding: 8 px; }
       .button {
@@ -127,15 +123,18 @@ static const char PROGMEM INDEX_HTML[] = R"rawliteral(
       .button::placeholder{
           color: white;
       }
-      img {  width: auto ;
-        max-width: 100% ;
+      img {  
+        width: 100% ;
         height: auto ; 
+        border: 1px solid #8969fb;
+        border-radius: 10px;
+        margin-bottom: 100px;
+        margin-right: 50px;
       }
     </style>
   </head>
   <body>
     <img src="" id="photo" >
-    
     <table>
       <tr><td colspan="3" align="center"><button class="button" ontouchstart="toggleCheckbox('forward');" ontouchend="toggleCheckbox('stop');" >Forward</button></td></tr>
       <tr><td align="center"><button class="button" ontouchstart="toggleCheckbox('left');" ontouchend="toggleCheckbox('stop');">Left</button></td><td align="center"><button class="button" ontouchstart="toggleCheckbox('stop');">Stop</button></td><td align="center"><button class="button" ontouchstart="toggleCheckbox('right');"  ontouchend="toggleCheckbox('stop');">Right</button></td></tr>
@@ -249,32 +248,10 @@ static esp_err_t cmd_handler(httpd_req_t *req){
   }
 
   sensor_t * s = esp_camera_sensor_get();
-  int res = 0;
-  
-  if(!strcmp(variable, "forward")) {
-    Serial.println("F");
-  }
-  else if(!strcmp(variable, "left")) {
-    Serial.println("L");
-    digitalWrite(15, 1);
-  }
-  else if(!strcmp(variable, "right")) {
-    Serial.println("R");
-  }
-  else if(!strcmp(variable, "backward")) {
-    Serial.println("B");    
-  }
-  else if(!strcmp(variable, "stop")) {
-    Serial.println("S");
-  }
-  else {
-    //mensagem
-    Serial.println(variable);
-  }
 
-  if(res){
-    return httpd_resp_send_500(req);
-  }
+  Serial.println(variable);
+  
+ 
 
   httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
   return httpd_resp_send(req, NULL, 0);
@@ -360,9 +337,6 @@ void setup() {
  
   // Wi-Fi connection
   WiFi.softAP(ssid, password);
-  
-  
-  
   // Start streaming web server
   startCameraServer();
 }
@@ -515,10 +489,50 @@ A montagem da circuito que possibilita essa comunicação pode ser vista abaixo.
   ![image](https://i.ibb.co/pwQXzxv/ESP-MEGA.png)
   
 ## Display LCD
-Por último, e realmente menos importante, temos o Display LCD Tft 2.4 Touch Screen, que em nosso projeto tem a missão apenas deixar o robô mais agradável e amigável.
+Por último, e realmente menos importante, temos o Display LCD TFT 2.4 Touch Screen, que em nosso projeto tem a missão apenas deixar o robô mais agradável e amigável.
 
   ![image](https://http2.mlstatic.com/D_NQ_NP_717788-MLB31359661286_072019-O.webp)
   
-Todavia, enxergamos que há uma infinidade de possibilidades que podem ser atribuídas a esse módulo, visto que poderiamos transmitir expressões, textos, imagens, entre outras coisas diretamente para a tela. Porém, não fizemos nenhuma dessas opções por conta do cronograma do projeto e essa possibilidade só ter sido aberta no fim do projeto, mas recomendamos para próximos projetos um aprovaitamente melhor do dispositivo.
-O módulo pode ser acoplado diretamente em um arduino UNO ou MEGA e seu funcionamento é um pouco complexo, mas é possível programá-lo sem tantos problemas com auxílio de alguns tutoriais. 
-**Em breve irei descrever mais detalhadamente como usar o componente**
+O componente foi desenvolvido para ser encaixado diretamente na placa no arduíno, por isso, sua ligação é facilitada. Veja abaixo como deve ser feita a ligação. Recomenda-se fortemente pesquisas adicionais.
+
+  ![image](https://i.ibb.co/19CVYmL/TFT-MEGA.png)
+  
+Após o encaixe, é possível programar a display a partir do arduino. 
+A seguinte referência mostra como funciona toda a programação do módulo utilizando-se da biblioteca MCUFRIEND_kbv, que possibilita manipular diversos displays distintos, incluindo o modelo usado no projeto.
+https://portal.vidadesilicio.com.br/primeiros-passos-shield-lcd-tft-24-touchscreen/
+
+O funcionamento é muito simples. Temos algumas funções que podem ser usadas, como drawFastHLine(), setTextColor, setTextSize, fillScreen(), etc.
+Para começar, precisa-se fazer o include da biblioteca e instanciar o objeto.
+````c
+#include <MCUFRIEND_kbv.h>
+MCUFRIEND_kbv tft;
+````
+Depois, basta usar as funções do objeto tft. Abaixo um exemplo simples de uso:
+
+````c
+#include <MCUFRIEND_kbv.h>
+MCUFRIEND_kbv tft;
+
+void setup() {
+  Serial.begin(115200);
+  uint16_t ID = tft.readID();
+  //assim pode-se descobrir qual o driver do display
+  Serial.print("Identificador do display: ");
+  Serial.println(ID, HEX);
+  
+  //iniciando serial do display
+  tft.begin(ID);
+  //girando a tela no sentido correto
+  tft.setRotation(3);
+  //pintando tudo de preto
+  tft.fillScreen(TFT_BLACK);
+  //trocando cor do texto para roxo e tamanho para 10 (isso é bem grande para a tela)
+  tft.setTextColor(ROXO);
+  tft.setTextSize(10);
+  //ajustando o cursor para escrever o texto centralizado
+  tft.setCursor(20, 90);
+  //escrevendo texto de boas vindas
+  tft.print("UoLi!");
+  delay(3000);
+}
+````
